@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprender Frances facil</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stats-header {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #999;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            color: #667eea;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .timer-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .timer-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .sessions-completed {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .sessions-label {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .sessions-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .add-session-btn {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pdf-viewer {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 600px;
+        }
+
+        .pages-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .page-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .page-canvas {
+            width: 100%;
+            height: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .page-canvas:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: scale(1.02);
+        }
+
+        .page-number {
+            text-align: center;
+            color: #999;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .page-checkbox {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #667eea;
+            z-index: 10;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: #f0f0f0;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: #e0e0e0;
+        }
+
+        .modal-canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .notes-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notes-input {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .vocabulary-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .vocab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .vocab-toggle {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .vocab-toggle:hover {
+            background: #764ba2;
+        }
+
+        .vocab-content {
+            display: none;
+        }
+
+        .vocab-content.open {
+            display: block;
+        }
+
+        .vocab-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-field {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .vocab-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .vocab-item {
+            background: linear-gradient(135deg, #f5f7ff, #f0f4ff);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .vocab-text {
+            flex: 1;
+        }
+
+        .vocab-item strong {
+            color: #667eea;
+            display: block;
+            font-size: 13px;
+        }
+
+        .vocab-item span {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .btn-remove {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-remove:hover {
+            background: #ff5252;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: #e8f0ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        .upload-text {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .upload-subtext {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 1024px) {
+            .pages-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-header {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .timer-display {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-header {
+                grid-template-columns: 1fr;
+            }
+
+            .vocab-input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .vocab-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header con progreso -->
+        <div class="header">
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Progreso de estudio</span>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="controls">
+                <label class="upload-area" id="uploadArea">
+                    <input type="file" id="pdfInput" accept=".pdf" />
+                    <div class="upload-text">+ Cargar PDF</div>
+                    <div class="upload-subtext">Haz clic o arrastra un PDF aquí</div>
+                </label>
+                <!-- <button class="btn btn-secondary" id="resetBtn">Reiniciar Progreso</button>-->
+                    <div class="stat-card">
+                        <div class="stat-label">Total de páginas</div>
+                        <div class="stat-value" id="totalPages">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Estudiadas</div>
+                        <div class="stat-value" id="pagesStudied">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Vocabulario</div>
+                        <div class="stat-value" id="vocabCount">0</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Sesiones completadas</div>
+                        <div class="stat-value" id="sessionsCount">0</div>
+                    </div>
+                    
+            </div>
+            
+        </div>
+
+        <!-- Estadísticas y Timer -->
+
+
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <!-- Visor de PDF -->
+            <div class="pdf-viewer">
+                <div class="stat-label">Sesión de Estudio</div>
+                <div class="timer-display" id="timerDisplay">45:00</div>
+                <div class="timer-controls">
+                    <button class="btn btn-primary timer-btn" id="startBtn">▶ Iniciar</button>
+                    <button class="btn btn-secondary timer-btn" id="pauseBtn" disabled>⏸ Pausar</button>
+                    <button class="btn btn-secondary timer-btn" id="resetTimerBtn">🔄 Reset</button>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>← Anterior</button>
+                    <button class="btn btn-secondary" id="nextBtn" disabled>Siguiente →</button>
+                </div>
+                <div id="pdfContent">
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        <p>Carga un PDF para comenzar a estudiar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notas -->
+            <div class="notes-section">
+                <div class="section-title">📝 Notas</div>
+                <textarea class="notes-input" id="notesInput" placeholder="Tus notas aquí..."></textarea>
+            </div>
+        </div>
+
+        <!-- Modal para ver página en grande -->
+        <div id="pageModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span id="modalPageNum"></span>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="modalCanvas" class="modal-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vocabulario -->
+        <div class="vocabulary-section">
+            <div class="vocab-header">
+                <div class="section-title">🌍 Vocabulario y Expresiones</div>
+                <button class="vocab-toggle" id="vocabToggle">Mostrar</button>
+            </div>
+            <div class="vocab-content" id="vocabContent">
+                <div class="vocab-input-group">
+                    <input type="text" class="input-field" id="wordInput" placeholder="Palabra o expresión...">
+                    <input type="text" class="input-field" id="translationInput" placeholder="Traducción...">
+                    <button class="btn btn-primary" id="addVocabBtn">Agregar</button>
+                </div>
+                <div class="vocab-list" id="vocabList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración de PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // IndexedDB para almacenar el PDF
+        let dbRequest = indexedDB.open('FrenchStudyDB', 1);
+        dbRequest.onupgradeneeded = (e) => {
+            e.target.result.createObjectStore('pdf', { keyPath: 'id' });
+        };
+
+        let db;
+        dbRequest.onsuccess = (e) => {
+            db = e.target.result;
+            loadState();
+            loadStoredPDF();
+        };
+
+        // Estado de la aplicación
+        let pdfDoc = null;
+        let currentPage = 0;
+        let totalPages = 0;
+        let checkedPages = new Set();
+        let vocabulary = [];
+        let notes = {};
+        let timerInterval = null;
+        let timeLeft = 45 * 60;
+        let isRunning = false;
+        let sessionsCompleted = 0;
+
+        // Elementos del DOM
+        const pdfInput = document.getElementById('pdfInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const pdfContent = document.getElementById('pdfContent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const notesInput = document.getElementById('notesInput');
+        const addVocabBtn = document.getElementById('addVocabBtn');
+        const wordInput = document.getElementById('wordInput');
+        const translationInput = document.getElementById('translationInput');
+        const vocabList = document.getElementById('vocabList');
+        const totalPagesEl = document.getElementById('totalPages');
+        const pagesStudiedEl = document.getElementById('pagesStudied');
+        const vocabCountEl = document.getElementById('vocabCount');
+        //const resetBtn = document.getElementById('resetBtn');
+        const vocabToggle = document.getElementById('vocabToggle');
+        const vocabContent = document.getElementById('vocabContent');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetTimerBtn = document.getElementById('resetTimerBtn');
+        const addSessionBtn = document.getElementById('addSessionBtn');
+        const sessionsCountEl = document.getElementById('sessionsCount');
+        const pageModal = document.getElementById('pageModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalCanvas = document.getElementById('modalCanvas');
+
+        // ========== TIMER FUNCTIONS ==========
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timeLeft);
+        }
+
+        function startTimer() {
+            console.log("runnning");
+            if (isRunning) return;
+            isRunning = true;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    startBtn.disabled = false;
+                    pauseBtn.disabled = true;
+                    addSessionBtn.disabled = false;
+                    alert('¡Sesión completada! Haz clic en "Agregar Sesión" para registrarla.');
+                }
+            }, 1000);
+
+            saveState();
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            saveState();
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timeLeft = 45 * 60;
+            updateTimerDisplay();
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            addSessionBtn.disabled = true;
+            saveState();
+        }
+
+        function addSession() {
+            sessionsCompleted++;
+            sessionsCountEl.textContent = sessionsCompleted;
+            resetTimer();
+            saveState();
+        }
+
+        // ========== PDF FUNCTIONS ==========
+        function loadState() {
+            const savedState = localStorage.getItem('frenchStudyState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                checkedPages = new Set(state.checkedPages || []);
+                vocabulary = state.vocabulary || [];
+                notes = state.notes || {};
+                currentPage = state.currentPage || 0;
+                sessionsCompleted = state.sessionsCompleted || 0;
+                timeLeft = state.timeLeft || 45 * 60;
+                isRunning = state.isRunning || false;
+            }
+            updateVocabDisplay();
+            updateProgress();
+            updateTimerDisplay();
+            sessionsCountEl.textContent = sessionsCompleted;
+        }
+
+        function saveState() {
+            const state = {
+                checkedPages: Array.from(checkedPages),
+                vocabulary,
+                notes,
+                currentPage,
+                sessionsCompleted,
+                timeLeft,
+                isRunning
+            };
+            localStorage.setItem('frenchStudyState', JSON.stringify(state));
+        }
+
+        function loadStoredPDF() {
+            if (!db) return;
+            const transaction = db.transaction(['pdf'], 'readonly');
+            const store = transaction.objectStore('pdf');
+            const request = store.get('savedPDF');
+
+            request.onsuccess = () => {
+                if (request.result) {
+                    const arrayBuffer = request.result.data;
+                    pdfjsLib.getDocument({ data: arrayBuffer }).promise.then(doc => {
+                        pdfDoc = doc;
+                        totalPages = doc.numPages;
+                        totalPagesEl.textContent = totalPages;
+                        renderPages();
+                        updateButtons();
+                    });
+                }
+            };
+        }
+
+        function savePDFToIndexedDB(arrayBuffer) {
+            if (!db) return;
+            const transaction = db.transaction(['pdf'], 'readwrite');
+            const store = transaction.objectStore('pdf');
+            store.put({ id: 'savedPDF', data: arrayBuffer });
+        }
+
+        async function loadPDF(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            savePDFToIndexedDB(arrayBuffer);
+            pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            totalPages = pdfDoc.numPages;
+            totalPagesEl.textContent = totalPages;
+            currentPage = 0;
+            renderPages();
+            updateButtons();
+            saveState();
+        }
+
+        async function renderPages() {
+            pdfContent.innerHTML = '';
+
+            if (!pdfDoc) return;
+
+            const pagesToRender = [currentPage + 1, currentPage + 2];
+            const container = document.createElement('div');
+            container.className = 'pages-container';
+
+            for (const pageNum of pagesToRender) {
+                if (pageNum > totalPages) continue;
+
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 1.5 });
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'page-wrapper';
+                //wrapper.onclick = () => showPageModal(pageNum);
+
+                const canvas = document.createElement('canvas');
+                canvas.className = 'page-canvas';
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                const ctx = canvas.getContext('2d');
+                await page.render({ canvasContext: ctx, viewport }).promise;
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'page-checkbox';
+                checkbox.checked = checkedPages.has(pageNum);
+                checkbox.onclick = (e) => {
+                    e.stopPropagation();
+                    if (checkbox.checked) {
+                        checkedPages.add(pageNum);
+                    } else {
+                        checkedPages.delete(pageNum);
+                    }
+                    updateProgress();
+                    saveState();
+                };
+
+                const pageNum_div = document.createElement('div');
+                pageNum_div.className = 'page-number';
+                pageNum_div.textContent = `Página ${pageNum}`;
+
+                wrapper.appendChild(canvas);
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(pageNum_div);
+                container.appendChild(wrapper);
+            }
+
+            pdfContent.appendChild(container);
+
+            // Cargar notas para la primera página visible
+            // Cargar notas para la primera página visible
+const firstVisiblePage = currentPage + 1;
+notesInput.value = notes[firstVisiblePage] || '';
+
+// Remover event listeners antiguos
+notesInput.onchange = null;
+notesInput.oninput = null;
+
+notesInput.onchange = () => {
+    notes[firstVisiblePage] = notesInput.value;
+    saveState();
+};
+
+notesInput.oninput = () => {
+    notes[firstVisiblePage] = notesInput.value;
+    saveState();
+};
+        }
+
+        async function showPageModal(pageNum) {
+            const page = await pdfDoc.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 2.5 });
+
+            modalCanvas.width = viewport.width;
+            modalCanvas.height = viewport.height;
+
+            const ctx = modalCanvas.getContext('2d');
+            await page.render({ canvasContext: ctx, viewport }).promise;
+
+            document.getElementById('modalPageNum').textContent = `Página ${pageNum}`;
+            pageModal.style.display = 'block';
+        }
+
+        function updateButtons() {
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage + 2 > totalPages;
+        }
+
+        function updateProgress() {
+            const progress = totalPages > 0 ? Math.round((checkedPages.size / totalPages) * 100) : 0;
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '%';
+            pagesStudiedEl.textContent = checkedPages.size;
+        }
+
+        // ========== VOCABULARY FUNCTIONS ==========
+        function addVocab() {
+            const word = wordInput.value.trim();
+            const translation = translationInput.value.trim();
+
+            if (!word || !translation) {
+                alert('Por favor completa ambos campos');
+                return;
+            }
+
+            vocabulary.push({ word, translation });
+            wordInput.value = '';
+            translationInput.value = '';
+            updateVocabDisplay();
+            saveState();
+            wordInput.focus();
+        }
+
+        function updateVocabDisplay() {
+            vocabList.innerHTML = '';
+            vocabCountEl.textContent = vocabulary.length;
+
+            vocabulary.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'vocab-item';
+                div.innerHTML = `
+                    <div class="vocab-text">
+                        <strong>${item.word}</strong>
+                        <span>${item.translation}</span>
+                    </div>
+                    <button class="btn-remove" onclick="removeVocab(${index})">✕</button>
+                `;
+                vocabList.appendChild(div);
+            });
+        }
+
+        function removeVocab(index) {
+            vocabulary.splice(index, 1);
+            updateVocabDisplay();
+            saveState();
+        }
+
+        // ========== EVENT LISTENERS ==========
+        pdfInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                loadPDF(e.target.files[0]);
+            }
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files[0]) {
+                pdfInput.files = e.dataTransfer.files;
+                loadPDF(e.dataTransfer.files[0]);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage -= 2;
+                renderPages();
+                updateButtons();
+                saveState();
+                window.scrollTo(0, 0);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage + 2 < totalPages) {
+                currentPage += 2;
+                renderPages();
+                updateButtons();
+                saveState();
+                window.scrollTo(0, 0);
+            }
+        });
+
+        addVocabBtn.addEventListener('click', addVocab);
+        wordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addVocab();
+        });
+        translationInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addVocab();
+        });
+
+        vocabToggle.addEventListener('click', () => {
+            vocabContent.classList.toggle('open');
+            vocabToggle.textContent = vocabContent.classList.contains('open') ? 'Ocultar' : 'Mostrar';
+        });
+
+        // resetBtn.addEventListener('click', () => {
+        //     if (confirm('¿Deseas reiniciar todo tu progreso?')) {
+        //         checkedPages.clear();
+        //         vocabulary = [];
+        //         notes = {};
+        //         currentPage = 0;
+        //         sessionsCompleted = 0;
+        //         timeLeft = 45 * 60;
+        //         localStorage.removeItem('frenchStudyState');
+        //         updateProgress();
+        //         updateVocabDisplay();
+        //         updateTimerDisplay();
+        //         notesInput.value = '';
+        //         sessionsCountEl.textContent = 0;
+        //         if (pdfDoc) {
+        //             renderPages();
+        //             updateButtons();
+        //         }
+        //     }
+        // });
+
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetTimerBtn.addEventListener('click', resetTimer);
+        //addSessionBtn.addEventListener('click', addSession);
+
+        closeModal.addEventListener('click', () => {
+            pageModal.style.display = 'none';
+        });
+
+        pageModal.addEventListener('click', (e) => {
+            if (e.target === pageModal) {
+                pageModal.style.display = 'none';
+            }
+        });
+
+        // Inicializar
+        loadState();
+        updateProgress();
+    </script>
+</body>
+</html>
