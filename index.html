@@ -717,7 +717,6 @@
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
         const resetTimerBtn = document.getElementById('resetTimerBtn');
-        const addSessionBtn = document.getElementById('addSessionBtn');
         const sessionsCountEl = document.getElementById('sessionsCount');
         const pageModal = document.getElementById('pageModal');
         const closeModal = document.getElementById('closeModal');
@@ -750,8 +749,8 @@
                     isRunning = false;
                     startBtn.disabled = false;
                     pauseBtn.disabled = true;
-                    addSessionBtn.disabled = false;
-                    alert('¡Sesión completada! Haz clic en "Agregar Sesión" para registrarla.');
+                    addSession();
+                    
                 }
             }, 1000);
 
@@ -773,7 +772,6 @@
             updateTimerDisplay();
             startBtn.disabled = false;
             pauseBtn.disabled = true;
-            addSessionBtn.disabled = true;
             saveState();
         }
 
@@ -1079,7 +1077,6 @@ notesInput.oninput = () => {
         startBtn.addEventListener('click', startTimer);
         pauseBtn.addEventListener('click', pauseTimer);
         resetTimerBtn.addEventListener('click', resetTimer);
-        //addSessionBtn.addEventListener('click', addSession);
 
         closeModal.addEventListener('click', () => {
             pageModal.style.display = 'none';
