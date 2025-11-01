@@ -321,6 +321,141 @@
             max-height: 100%;
         }
 
+        .practice-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        .practice-content {
+            background: white;
+            margin: auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .practice-word {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 30px 0;
+            min-height: 50px;
+            word-wrap: break-word;
+        }
+
+        .practice-counter {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .practice-reveal-btn {
+            background: #4c6ef5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .practice-reveal-btn:hover {
+            background: #364fc7;
+        }
+
+        .practice-reveal-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .practice-translation {
+            font-size: 18px;
+            color: #999;
+            margin: 20px 0;
+            min-height: 25px;
+            font-style: italic;
+        }
+
+        .practice-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .practice-btn-ok {
+            background: #51cf66;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .practice-btn-ok:hover {
+            background: #40c057;
+        }
+
+        .practice-btn-ko {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .practice-btn-ko:hover {
+            background: #ff5252;
+        }
+
+        .practice-close {
+            background: #f0f0f0;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .practice-close:hover {
+            background: #e0e0e0;
+        }
+
+        .practice-complete {
+            font-size: 20px;
+            color: #51cf66;
+            margin: 30px 0;
+        }
+
         .notes-section {
             background: white;
             border-radius: 15px;
@@ -368,6 +503,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .vocab-toggle {
@@ -541,6 +678,11 @@
             .timer-display {
                 font-size: 36px;
             }
+
+            .vocab-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         @media (max-width: 768px) {
@@ -554,6 +696,11 @@
 
             .vocab-list {
                 grid-template-columns: 1fr;
+            }
+
+            .vocab-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -577,7 +724,6 @@
                     <div class="upload-text">+ Cargar PDF</div>
                     <div class="upload-subtext">Haz clic o arrastra un PDF aquí</div>
                 </label>
-                <!-- <button class="btn btn-secondary" id="resetBtn">Reiniciar Progreso</button>-->
                     <div class="stat-card">
                         <div class="stat-label">Total de páginas</div>
                         <div class="stat-value" id="totalPages">0</div>
@@ -595,13 +741,14 @@
                         <div class="stat-label">Sesiones completadas</div>
                         <div class="stat-value" id="sessionsCount">0</div>
                     </div>
-                    
+
+                    <div class="stat-card">
+                        <div class="stat-label">Práctica vocabulario</div>
+                        <div class="stat-value" id="practiceCount">0</div>
+                    </div>
             </div>
             
         </div>
-
-        <!-- Estadísticas y Timer -->
-
 
         <!-- Contenido principal -->
         <div class="main-content">
@@ -648,11 +795,29 @@
             </div>
         </div>
 
+        <!-- Practice Modal -->
+        <div id="practiceModal" class="practice-modal">
+            <div class="practice-content">
+                <button class="practice-close" id="practiceClose">&times;</button>
+                <div class="practice-counter">
+                    <span id="practiceCounter">0/0</span>
+                </div>
+                <div class="practice-word" id="practiceWord"></div>
+                <button class="practice-reveal-btn" id="practiceRevealBtn">Revelar</button>
+                <div class="practice-translation" id="practiceTranslation"></div>
+                <div class="practice-buttons">
+                    <button class="practice-btn-ok" id="practiceOkBtn">✓ OK</button>
+                    <button class="practice-btn-ko" id="practiceKoBtn">✕ KO</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Vocabulario -->
         <div class="vocabulary-section">
             <div class="vocab-header">
                 <div class="section-title">🌍 Vocabulario y Expresiones</div>
                 <button class="vocab-toggle" id="vocabToggle">Mostrar</button>
+                <button class="vocab-toggle" id="practiceBtn">Practicar</button>
             </div>
             <div class="vocab-content" id="vocabContent">
                 <div class="vocab-input-group">
@@ -693,6 +858,13 @@
         let timeLeft = 45 * 60;
         let isRunning = false;
         let sessionsCompleted = 0;
+        let practiceVocabPracticed = 0;
+
+        // Variables de práctica
+        let practiceList = [];
+        let currentPracticeIndex = 0;
+        let currentPracticeIsWord = true;
+        let currentPracticeRevealed = false;
 
         // Elementos del DOM
         const pdfInput = document.getElementById('pdfInput');
@@ -710,7 +882,6 @@
         const totalPagesEl = document.getElementById('totalPages');
         const pagesStudiedEl = document.getElementById('pagesStudied');
         const vocabCountEl = document.getElementById('vocabCount');
-        //const resetBtn = document.getElementById('resetBtn');
         const vocabToggle = document.getElementById('vocabToggle');
         const vocabContent = document.getElementById('vocabContent');
         const timerDisplay = document.getElementById('timerDisplay');
@@ -718,9 +889,19 @@
         const pauseBtn = document.getElementById('pauseBtn');
         const resetTimerBtn = document.getElementById('resetTimerBtn');
         const sessionsCountEl = document.getElementById('sessionsCount');
+        const practiceCountEl = document.getElementById('practiceCount');
         const pageModal = document.getElementById('pageModal');
         const closeModal = document.getElementById('closeModal');
         const modalCanvas = document.getElementById('modalCanvas');
+        const practiceModal = document.getElementById('practiceModal');
+        const practiceBtn = document.getElementById('practiceBtn');
+        const practiceClose = document.getElementById('practiceClose');
+        const practiceWord = document.getElementById('practiceWord');
+        const practiceCounter = document.getElementById('practiceCounter');
+        const practiceOkBtn = document.getElementById('practiceOkBtn');
+        const practiceKoBtn = document.getElementById('practiceKoBtn');
+        const practiceRevealBtn = document.getElementById('practiceRevealBtn');
+        const practiceTranslation = document.getElementById('practiceTranslation');
 
         // ========== TIMER FUNCTIONS ==========
         function formatTime(seconds) {
@@ -734,7 +915,6 @@
         }
 
         function startTimer() {
-            console.log("runnning");
             if (isRunning) return;
             isRunning = true;
             startBtn.disabled = true;
@@ -750,7 +930,6 @@
                     startBtn.disabled = false;
                     pauseBtn.disabled = true;
                     addSession();
-                    
                 }
             }, 1000);
 
@@ -792,6 +971,7 @@
                 notes = state.notes || {};
                 currentPage = state.currentPage || 0;
                 sessionsCompleted = state.sessionsCompleted || 0;
+                practiceVocabPracticed = state.practiceVocabPracticed || 0;
                 timeLeft = state.timeLeft || 45 * 60;
                 isRunning = state.isRunning || false;
             }
@@ -799,6 +979,7 @@
             updateProgress();
             updateTimerDisplay();
             sessionsCountEl.textContent = sessionsCompleted;
+            practiceCountEl.textContent = practiceVocabPracticed;
         }
 
         function saveState() {
@@ -808,6 +989,7 @@
                 notes,
                 currentPage,
                 sessionsCompleted,
+                practiceVocabPracticed,
                 timeLeft,
                 isRunning
             };
@@ -870,7 +1052,6 @@
 
                 const wrapper = document.createElement('div');
                 wrapper.className = 'page-wrapper';
-                //wrapper.onclick = () => showPageModal(pageNum);
 
                 const canvas = document.createElement('canvas');
                 canvas.className = 'page-canvas';
@@ -907,24 +1088,21 @@
 
             pdfContent.appendChild(container);
 
-            // Cargar notas para la primera página visible
-            // Cargar notas para la primera página visible
-const firstVisiblePage = currentPage + 1;
-notesInput.value = notes[firstVisiblePage] || '';
+            const firstVisiblePage = currentPage + 1;
+            notesInput.value = notes[firstVisiblePage] || '';
 
-// Remover event listeners antiguos
-notesInput.onchange = null;
-notesInput.oninput = null;
+            notesInput.onchange = null;
+            notesInput.oninput = null;
 
-notesInput.onchange = () => {
-    notes[firstVisiblePage] = notesInput.value;
-    saveState();
-};
+            notesInput.onchange = () => {
+                notes[firstVisiblePage] = notesInput.value;
+                saveState();
+            };
 
-notesInput.oninput = () => {
-    notes[firstVisiblePage] = notesInput.value;
-    saveState();
-};
+            notesInput.oninput = () => {
+                notes[firstVisiblePage] = notesInput.value;
+                saveState();
+            };
         }
 
         async function showPageModal(pageNum) {
@@ -995,6 +1173,83 @@ notesInput.oninput = () => {
             saveState();
         }
 
+        // ========== PRACTICE FUNCTIONS ==========
+        function getPracticeWords() {
+            if (vocabulary.length === 0) {
+                alert('No hay vocabulario para practicar');
+                return null;
+            }
+
+            const count = Math.min(30, vocabulary.length);
+
+            // Shuffle the vocabulary array (copy first so we don’t mutate the original)
+            const shuffled = [...vocabulary].sort(() => Math.random() - 0.5);
+
+            // Take the first "count" unique words and assign IDs
+            const words = shuffled.slice(0, count).map((word, i) => ({ ...word, id: i }));
+
+            return words;
+        }
+
+
+        function showPracticeItem() {
+            if (practiceList.length === 0) {
+                practiceWord.innerHTML = '<div class="practice-complete">¡Completado! 🎉</div>';
+                practiceOkBtn.disabled = true;
+                practiceKoBtn.disabled = true;
+                practiceRevealBtn.disabled = true;
+                practiceTranslation.textContent = '';
+                
+                setTimeout(() => {
+                    practiceVocabPracticed++;
+                    practiceCountEl.textContent = practiceVocabPracticed;
+                    saveState();
+                    setTimeout(() => {
+                        practiceModal.style.display = 'none';
+                    }, 1500);
+                }, 1000);
+                
+                return;
+            }
+            
+            const item = practiceList[currentPracticeIndex];
+            currentPracticeIsWord = Math.random() > 0.5;
+            currentPracticeRevealed = false;
+            
+            practiceWord.textContent = currentPracticeIsWord ? item.word : item.translation;
+            practiceCounter.textContent = `${31 - practiceList.length}/${30}`;
+            practiceTranslation.textContent = '';
+            practiceRevealBtn.textContent = 'Revelar';
+            practiceRevealBtn.disabled = false;
+            practiceOkBtn.disabled = false;
+            practiceKoBtn.disabled = false;
+        }
+
+        function revealTranslation() {
+            if (currentPracticeRevealed) return;
+            
+            const item = practiceList[currentPracticeIndex];
+            const translation = currentPracticeIsWord ? item.translation : item.word;
+            
+            practiceTranslation.textContent = translation;
+            practiceRevealBtn.textContent = 'Revelado ✓';
+            practiceRevealBtn.disabled = true;
+            currentPracticeRevealed = true;
+        }
+
+        function handlePracticeOk() {
+            practiceList.splice(currentPracticeIndex, 1);
+            if (practiceList.length > 0) {
+                currentPracticeIndex = Math.floor(Math.random() * practiceList.length);
+            }
+            showPracticeItem();
+        }
+
+        function handlePracticeKo() {
+            currentPracticeIndex = (currentPracticeIndex + 1) % practiceList.length;
+            showPracticeItem();
+        }
+
         // ========== EVENT LISTENERS ==========
         pdfInput.addEventListener('change', (e) => {
             if (e.target.files[0]) {
@@ -1053,26 +1308,31 @@ notesInput.oninput = () => {
             vocabToggle.textContent = vocabContent.classList.contains('open') ? 'Ocultar' : 'Mostrar';
         });
 
-        // resetBtn.addEventListener('click', () => {
-        //     if (confirm('¿Deseas reiniciar todo tu progreso?')) {
-        //         checkedPages.clear();
-        //         vocabulary = [];
-        //         notes = {};
-        //         currentPage = 0;
-        //         sessionsCompleted = 0;
-        //         timeLeft = 45 * 60;
-        //         localStorage.removeItem('frenchStudyState');
-        //         updateProgress();
-        //         updateVocabDisplay();
-        //         updateTimerDisplay();
-        //         notesInput.value = '';
-        //         sessionsCountEl.textContent = 0;
-        //         if (pdfDoc) {
-        //             renderPages();
-        //             updateButtons();
-        //         }
-        //     }
-        // });
+        // Practice button event listener
+        practiceBtn.addEventListener('click', () => {
+            practiceList = getPracticeWords();
+            if (!practiceList) return;
+            
+            currentPracticeIndex = 0;
+            practiceModal.style.display = 'block';
+            showPracticeItem();
+        });
+
+        // Close practice modal
+        practiceClose.addEventListener('click', () => {
+            practiceModal.style.display = 'none';
+        });
+
+        practiceModal.addEventListener('click', (e) => {
+            if (e.target === practiceModal) {
+                practiceModal.style.display = 'none';
+            }
+        });
+
+        // Practice buttons
+        practiceOkBtn.addEventListener('click', handlePracticeOk);
+        practiceKoBtn.addEventListener('click', handlePracticeKo);
+        practiceRevealBtn.addEventListener('click', revealTranslation);
 
         startBtn.addEventListener('click', startTimer);
         pauseBtn.addEventListener('click', pauseTimer);
