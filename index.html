@@ -987,7 +987,6 @@
                 isRunning = state.isRunning || false;
             }
             updateVocabDisplay();
-            updateProgress();
             updateTimerDisplay();
             sessionsCountEl.textContent = sessionsCompleted;
             practiceCountEl.textContent = practiceVocabPracticed;
@@ -1022,6 +1021,7 @@
                         totalPagesEl.textContent = totalPages;
                         renderPages();
                         updateButtons();
+                        updateProgress();
                     });
                 }
             };
