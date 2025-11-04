@@ -904,6 +904,9 @@
         const practiceTranslation = document.getElementById('practiceTranslation');
 
         // ========== TIMER FUNCTIONS ==========
+        let timerStartTime = null;
+        let timerPausedTime = 0;
+
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = seconds % 60;
@@ -920,8 +923,11 @@
             startBtn.disabled = true;
             pauseBtn.disabled = false;
 
+            timerStartTime = Date.now() - timerPausedTime;
+
             timerInterval = setInterval(() => {
-                timeLeft--;
+                const elapsed = Math.floor((Date.now() - timerStartTime) / 1000);
+                timeLeft = (45 * 60) - elapsed;
                 updateTimerDisplay();
 
                 if (timeLeft <= 0) {
@@ -929,9 +935,11 @@
                     isRunning = false;
                     startBtn.disabled = false;
                     pauseBtn.disabled = true;
+                    timeLeft = 0;
+                    updateTimerDisplay();
                     addSession();
                 }
-            }, 1000);
+            }, 100);
 
             saveState();
         }
@@ -939,6 +947,7 @@
         function pauseTimer() {
             clearInterval(timerInterval);
             isRunning = false;
+            timerPausedTime = Date.now() - timerStartTime;
             startBtn.disabled = false;
             pauseBtn.disabled = true;
             saveState();
@@ -948,6 +957,8 @@
             clearInterval(timerInterval);
             isRunning = false;
             timeLeft = 45 * 60;
+            timerStartTime = null;
+            timerPausedTime = 0;
             updateTimerDisplay();
             startBtn.disabled = false;
             pauseBtn.disabled = true;
