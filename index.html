@@ -938,6 +938,7 @@
                     timeLeft = 0;
                     updateTimerDisplay();
                     addSession();
+                    sendProgress();
                 }
             }, 100);
 
@@ -1362,6 +1363,40 @@
         // Inicializar
         loadState();
         updateProgress();
+
+
+        // NOTIFICATION
+        function sendProgress() {
+            const state = JSON.parse(localStorage.getItem("frenchStudyState"));
+            if (!state) {
+                console.log("No frenchStudyState found.");
+                return;
+            }
+
+            // Extract only what you want to send
+            const summary = {
+                sessionsCompleted: state.sessionsCompleted ?? 0,
+                practiceVocabPracticed: state.practiceVocabPracticed ?? 0,
+                checkedPagesCount: Array.isArray(state.checkedPages) ? state.checkedPages.length : 0,
+                timestamp: new Date().toISOString()
+            };
+
+            // Prepare form data
+            const formData = new FormData();
+            formData.append("entry.571600580", JSON.stringify(summary));
+
+            // Send to Google Form
+            fetch("https://docs.google.com/forms/d/e/1FAIpQLSfDW3YRnP52660mMAtB6Rtcj2cfdyllBRUEIqQxwr4Rpp_ZPQ/formResponse", {
+                method: "POST",
+                body: formData,
+                mode: "no-cors"
+            }).then(() => {
+                console.log("✅ Summary sent:", summary);
+            }).catch(err => {
+                console.error("❌ Failed to send progress:", err);
+            });
+        }
+
     </script>
 </body>
 </html>
